@@ -49,7 +49,7 @@ app.set('view engine', 'ejs');
 // const databaseName = 'task-app';
 // const collectionName = 'users';
 
-const port = 3000;
+const port = 3001;
 
 // http://localhost:3000/users
 
@@ -189,6 +189,5 @@ install express/ mongodb / mongoose / nodemon
 3. Create Schema for collection(table)
 4. define routes in app and write query inside callback , also return result with status.
 */
-
 
 
