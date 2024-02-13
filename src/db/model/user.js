@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const { default: isEmail } = require('validator/lib/isEmail');
+// const { default: isEmail } = require('validator/lib/isEmail');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -13,8 +14,13 @@ const userSchema = new mongoose.Schema({
         unique: true,
         trim: true,
         lowercase: true,
-        validate(value){
-            if(!validator(isEmail(value))){
+        // validate(value){
+        //     if(!validator(isEmail(value))){
+        //         throw new Error('Email is invalid')
+        //     }
+        // }
+        validate(value) {
+            if (!validator.isEmail(value)) {
                 throw new Error('Email is invalid')
             }
         }
@@ -28,3 +34,5 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema)
 
 module.exports = User;
+
+//

@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
  
+
+
 const Task = require('./model/task');
 
 const path = require('path');
@@ -10,9 +12,14 @@ const taskRouter = require('./routes/task');
 const userRouter = require('./routes/user.routes');
 // console.log('test', taskRouter)
 const app = express();
+
+
+
+
 app.use(express.json());
 // app.use(express.text());
 
+ 
 app.use(userRouter);
 
 //static template-engine
