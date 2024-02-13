@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-// const { default: isEmail } = require('validator/lib/isEmail');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
+
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -14,11 +15,6 @@ const userSchema = new mongoose.Schema({
         unique: true,
         trim: true,
         lowercase: true,
-        // validate(value){
-        //     if(!validator(isEmail(value))){
-        //         throw new Error('Email is invalid')
-        //     }
-        // }
         validate(value) {
             if (!validator.isEmail(value)) {
                 throw new Error('Email is invalid')
@@ -30,6 +26,19 @@ const userSchema = new mongoose.Schema({
         required: true
     }
 });
+
+// Hash Plain text Password before save it to database or pass it in userController.
+// we cann't use arrow-function becouse of this-binding.
+userSchema.pre('save', async function(next){
+
+    const user = this
+    console.log('step-2');
+    if(user.isModified('password')){
+        user.password = await bcrypt.hash(user.password, 8);
+    }
+
+    next();
+})
 
 const User = mongoose.model('User', userSchema)
 
