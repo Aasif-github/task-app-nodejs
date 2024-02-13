@@ -1,5 +1,6 @@
 const userModel = require("../model/user");
 const { body, validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
 
 // @ http://localhost:3001/registration
 // @ author: asif
@@ -55,4 +56,42 @@ exports.testing = [
         }
      }
 
-]
+];
+
+/*
+@ Method: Get
+@ url : http://localhost:3001/checkPassword
+@ author: Asif
+*/
+
+/*
+type of request
+query params
+params
+header
+*/
+
+exports.checkPassword =  async (req, res) => {
+   
+    try{
+        const password = '12345';
+        const id = '65cb61c1cf2d9636bae7823e';
+        //console.log('req:', req.query.password);
+
+        const userInfo = await userModel.findById(id);
+            
+        // bcrypt.compare(req.query.password, userInfo.password)
+
+        const result = await bcrypt.compare(password, userInfo.password);
+        //console.log(result);
+
+        if(result){
+            res.status(200).json('Password match');
+        }else{
+            res.status(404).json('Password Not Match');
+        }
+    }catch(err){
+        console.log(err);
+        res.status(500).json(err);
+    }    
+}
