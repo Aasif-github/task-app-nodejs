@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 
 // @ http://localhost:3001/registration
 // @ author: asif
+// @ similer package: https://joi.dev/api/
 
 exports.testing = [
 
@@ -65,10 +66,11 @@ exports.testing = [
 */
 
 /*
-type of request
-query params
-params
-header
+type of request:-
+1.query params
+2.params
+3.header
+4.body
 */
 
 exports.checkPassword =  async (req, res) => {
@@ -95,3 +97,59 @@ exports.checkPassword =  async (req, res) => {
         res.status(500).json(err);
     }    
 }
+
+// @Method - PUT  
+// http://localhost:3001/updateUser/userId
+// author: asif
+
+exports.updateUserInfo = [
+    /*
+    1. Check user is present in database or not.
+    2. find object-key for update user info.
+    3. save as it is in database.
+    */ 
+
+    async (req, res) => {
+        try{
+            // console.log(req.params.id); 65cb61c1cf2d9636bae7823e
+            const user_id = req.params.id;
+            
+            const allowedTyped = ['name', 'email', 'password'];            
+
+            const user  = await userModel.findById(user_id);                        
+            
+            if(!user){
+                return res.send('No User Found');
+            }
+
+            // request by user for update
+            const updates = Object.keys(req.body)
+            
+            console.log('up:', updates);
+
+            //  updates.every(callbackFun(ele, index, array))
+            const isValidOperation = updates.every((update)=>{
+                return allowedTyped.includes(update)
+            });
+          
+            if(!isValidOperation){
+                res.status(400).send({error:'Invalid key'});
+            }
+
+            updates.forEach((update) => { return user[update] = req.body[update]});
+            
+            console.log('as', user);
+             
+            await user.save();
+            res.status(200).send(user);  
+        }catch(err){
+            console.log(err);
+            res.send(err);    
+        }
+        
+    }
+];
+
+// password" a111
+// password: hash: $2a$08$.dknCjiBWAgAJjVu5WHBW.jkajsf4Idr1EwGNhasnSyzQEf2Uuwr.
+

@@ -8,6 +8,7 @@ router.get('/testing', function(req, res){
 
 router.post('/registration', userController.testing);
 router.get('/checkPassword', userController.checkPassword);
+router.put('/updateUser/:id', userController.updateUserInfo);
 
 
 
