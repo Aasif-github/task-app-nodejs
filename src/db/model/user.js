@@ -3,6 +3,27 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+/*
+The best place to store JWTs in a Node.js app is typically in the HTTP Headers using the Authorization header with the Bearer scheme. This method is commonly used and has some advantages:
+
+1. Security: Storing JWTs in the Authorization header helps protect against XSS attacks since the token is not accessible by client-side scripts.
+
+2. Standardized: It follows the standard way of handling authentication tokens in HTTP requests.
+
+Example: Authorization: Bearer your.jwt.token
+
+Always ensure that your Node.js app is using HTTPS to encrypt the communication, preventing eavesdropping on the token during transit.
+
+Additionally, if your application has a front-end (e.g., a web client), consider using HTTP-only cookies to store JWTs for added security. This prevents client-side scripts from accessing the token.
+----------------------------------------------------------
+
+Both localStorage and SessionStorage are not protected by the XSS by default.
+
+However, the Cookie provides a bunch of security options like SameSite ,” HttpOnly , etc. So it is good to go with Cookie.
+
+“Store Your JWT on Cookie with Some Secure Flag.”
+
+*/
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
