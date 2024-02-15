@@ -1,12 +1,13 @@
 const userModel = require("../model/user");
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // @ http://localhost:3001/registration
 // @ author: asif
 // @ similer package: https://joi.dev/api/
 
-exports.testing = [
+exports.registration = [
 
     body('name').trim().isLength({min:2}).escape()
         .withMessage('User name must be specified')
@@ -47,8 +48,10 @@ exports.testing = [
                     res.status(422).json({errors: errors.array()})
               }else{
                 console.log('step-1');
-                const userSaved = await user_data.save();                   
-                res.status(200).json(userSaved);
+                const userSaved = await user_data.save();   
+                const token = await user_data.generateAuthToken();                
+                
+                res.status(200).json({ userSaved, token });
               }
     
         }catch(err){
@@ -150,6 +153,35 @@ exports.updateUserInfo = [
     }
 ];
 
-// password" a111
-// password: hash: $2a$08$.dknCjiBWAgAJjVu5WHBW.jkajsf4Idr1EwGNhasnSyzQEf2Uuwr.
+ /*
+# Testing credentials
+{
+    "name":"john",
+    "email":"john@gmail.com",
+    "password":"12345"
+}
+ */
 
+exports.login = [
+
+    async (req, res) => {
+        
+        try {
+            const user = await userModel.findByCredentials(req.body.email, req.body.password); // statics
+            const token = await user.generateAuthToken();  // methods
+
+            res.status(200).send({user, token});    
+        } catch (error) {
+            console.log(error);
+            res.status(400).send(error);
+        }
+    }
+
+];
+
+exports.doTask = [
+
+    async (req, res) => {
+
+    }
+];

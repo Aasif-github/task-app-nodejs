@@ -6,10 +6,10 @@ router.get('/testing', function(req, res){
     res.send('testing-user-routes');
 })
 
-router.post('/registration', userController.testing);
+router.post('/registration', userController.registration);
 router.get('/checkPassword', userController.checkPassword);
 router.put('/updateUser/:id', userController.updateUserInfo);
-
+router.post('/user/login', userController.login);
 
 
 

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
-
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -24,7 +24,13 @@ const userSchema = new mongoose.Schema({
     password:{
         type: String,
         required: true
-    }
+    },
+    tokens:[{
+        token:{
+            type: String,
+            required: true
+        }        
+    }]
 });
 
 // Hash Plain text Password before save it to database or pass it in userController.
@@ -38,7 +44,57 @@ userSchema.pre('save', async function(next){
     }
 
     next();
-})
+});
+
+
+
+/*
+https://athiravajit.medium.com/what-are-methods-and-statistics-in-mongoose-f128d51b49b0
+https://stackoverflow.com/questions/39708841/what-is-the-use-of-mongoose-methods-and-statics
+
+
+Statistics and methods are quiet similar to each other with only difference being statics are functions you call on the whole model whereas methods are functions you call on a particular instance.
+*/
+
+userSchema.statics.findByCredentials = async (email, password) => {
+        
+    try {
+        const user = await User.findOne({email});
+        
+        if(!user){
+            throw new Error('No User Found');
+        }
+      
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        
+        if(!isPasswordMatch){
+            throw new Error("Password Not Match")
+        }
+        return user;
+        
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+    
+}
+
+userSchema.methods.generateAuthToken = async function(){
+    const user = this;
+    
+    // Create a JWT
+    const secretKey = 'myKey';
+    const payload = { _id:user._id.toString() };
+    
+    const token = jwt.sign(payload, secretKey, {expiresIn:'1h'});
+
+    user.tokens = user.tokens.concat({ token });
+    
+    //saving it to database
+    await user.save();
+  
+   return token;
+}
 
 const User = mongoose.model('User', userSchema)
 
