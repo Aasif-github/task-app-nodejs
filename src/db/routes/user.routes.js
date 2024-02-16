@@ -1,7 +1,7 @@
 const express = require('express');
 const userController = require("../controllers/userController.js");
 const router = express.Router();
-const multer = require('multer')
+const multer = require('multer');
 
 
 // https://medium.com/geekculture/nodejs-image-upload-with-multer-e6cf08c1562f
@@ -35,8 +35,7 @@ select - Body -> form-data
 Key - upload [type:file] | value: select File
 
 */
+
 router.post('/user/image', upload.single('upload'), userController.uploadImage);
-
-
 
 module.exports = router;
