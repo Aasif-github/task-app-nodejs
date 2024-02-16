@@ -1,11 +1,11 @@
 const userModel = require("../model/user");
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const sharp = require('sharp'); // for multer, to shape or customise-image
 
 // @ http://localhost:3001/registration
 // @ author: asif
-// @ similer package: https://joi.dev/api/
+// @ similer package for validation: https://joi.dev/api/
 
 exports.registration = [
 
@@ -177,6 +177,21 @@ exports.login = [
         }
     }
 
+];
+
+
+
+exports.uploadImage = [
+
+    async (req, res) => {
+        try {
+             await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toFile(__dirname + `/images/${req.file.originalname}`)
+             res.status(201).send('Image uploaded succesfully')
+        } catch (error) {
+            console.log(error)
+            res.status(400).send(error)
+        }
+    }
 ];
 
 exports.doTask = [

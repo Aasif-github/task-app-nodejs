@@ -13,13 +13,24 @@ const userRouter = require('./routes/user.routes');
 // console.log('test', taskRouter)
 const app = express();
 
-
-
-
 app.use(express.json());
 // app.use(express.text());
 
- 
+// middleware - (use before routes)
+// request -> route - without middleware
+// request -> middleware -> route - with middleware
+// middleware acts as a bridge between request and routes
+app.use((req, res, next) => {
+  console.log(req.method);
+  console.log(req.path);
+  next();
+})
+
+// middleware for maintance mode
+// app.use((req, res, next) => {
+//   res.send('This website is in maintance mode. check after 4hrs. :(');
+// });
+
 app.use(userRouter);
 
 //static template-engine
@@ -28,9 +39,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/task/sample', taskRouter.test_contoller);
 // app.use();
-
-
-
 
 /*
 The express. json() function is a middleware function used in Express. js applications to parse It is the process of converting a JSON string to a JSON object for data manipulation. 
