@@ -18,8 +18,8 @@ const upload = multer({
     }
 }) 
 
-router.get('/testing', function(req, res){
-    res.send('testing-user-routes');
+router.get('/', function(req, res){
+    res.send('<h3>Welcome to my app..</h3>');
 })
 
 router.post('/registration', userController.registration);

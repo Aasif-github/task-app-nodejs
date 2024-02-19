@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
- 
+const rateLimit = require("express-rate-limit");
 
 
 const Task = require('./model/task');
@@ -30,6 +30,19 @@ app.use((req, res, next) => {
 // app.use((req, res, next) => {
 //   res.send('This website is in maintance mode. check after 4hrs. :(');
 // });
+
+// express-rate-limit
+// Only 10 request-hits accepted by app within 1 hrs
+const limiter = rateLimit({
+  max: 10,
+  windowMs: 60 * 60 * 1000,
+  message: "Too many request from this IP"
+});
+
+// Apply the rate limiting middleware to all requests.
+app.use(limiter)
+
+
 
 app.use(userRouter);
 
