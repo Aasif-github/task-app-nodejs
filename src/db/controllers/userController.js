@@ -72,7 +72,14 @@ exports.readUser = [
     async (req, res) =>{
         
         try{
-          res.send(req.user);
+            userInfo = req.user;
+            
+            delete userInfo.password;
+            delete userInfo.tokens;
+
+            console.log(userInfo);
+
+          res.send(userInfo);
 
         }catch(err){
             res.status(500).send(err);
@@ -198,6 +205,31 @@ exports.login = [
 
 ];
 
+exports.logout = [
+   
+    async(req, res) => {
+            
+            const user = req.user;
+            console.log(user);
+            res.status(200).send({user});
+        try{
+
+        }catch(error){
+
+        }
+    }
+]
+
+exports.logoutAll = [
+    async(req, res) => {
+        
+        try{
+            
+        }catch(error){
+
+        }
+    }
+]
 
 
 exports.uploadImage = [

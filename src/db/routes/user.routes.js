@@ -29,6 +29,9 @@ router.get('/checkPassword', userController.checkPassword);
 router.put('/updateUser/:id', userController.updateUserInfo);
 router.post('/user/login', userController.login);
 
+router.post('/user/logout', auth, userController.logout);
+router.post('/user/logoutAll', userController.logoutAll);
+
 /*
 
 In Postman 
