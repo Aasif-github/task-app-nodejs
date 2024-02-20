@@ -2,7 +2,7 @@ const express = require('express');
 const userController = require("../controllers/userController.js");
 const router = express.Router();
 const multer = require('multer');
-
+const auth = require('../middlewares/Auth.js');
 
 // https://medium.com/geekculture/nodejs-image-upload-with-multer-e6cf08c1562f
 //configure multer
@@ -23,6 +23,8 @@ router.get('/', function(req, res){
 })
 
 router.post('/registration', userController.registration);
+// Read user
+router.get('/users', auth, userController.readUser);
 router.get('/checkPassword', userController.checkPassword);
 router.put('/updateUser/:id', userController.updateUserInfo);
 router.post('/user/login', userController.login);

@@ -21,8 +21,8 @@ app.use(express.json());
 // request -> middleware -> route - with middleware
 // middleware acts as a bridge between request and routes
 app.use((req, res, next) => {
-  console.log(req.method);
-  console.log(req.path);
+  // console.log(req.method);
+  // console.log(req.path);
   next();
 })
 
@@ -35,12 +35,12 @@ app.use((req, res, next) => {
 // Only 10 request-hits accepted by app within 1 hrs
 const limiter = rateLimit({
   max: 10,
-  windowMs: 60 * 60 * 1000,
+  windowMs: 60 * 60 * 1000, //  60sec * 60min * 1000ms - 1hrs
   message: "Too many request from this IP"
 });
 
 // Apply the rate limiting middleware to all requests.
-app.use(limiter)
+app.use(limiter);
 
 
 

@@ -2,6 +2,7 @@ const userModel = require("../model/user");
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const sharp = require('sharp'); // for multer, to shape or customise-image
+const { Error } = require("mongoose");
 
 // @ http://localhost:3001/registration
 // @ author: asif
@@ -61,6 +62,30 @@ exports.registration = [
      }
 
 ];
+/*
+
+*/
+exports.readUser = [
+    
+    async (req, res) =>{
+        
+        try{
+            const user = await userModel.find({});
+
+            if(!user){
+                throw new Error();
+            }
+
+            res.status(200).send({user});
+        }catch(err){
+            res.status(500).send(err);
+        }
+        
+    }
+];
+
+
+
 
 /*
 @ Method: Get

@@ -107,7 +107,7 @@ userSchema.methods.generateAuthToken = async function(){
     const secretKey = 'myKey';
     const payload = { _id:user._id.toString() };
     
-    const token = jwt.sign(payload, secretKey, {expiresIn:'1h'});
+    const token = jwt.sign(payload, secretKey, {expiresIn:'10h'});
 
     user.tokens = user.tokens.concat({ token });
     
