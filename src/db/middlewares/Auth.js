@@ -5,16 +5,11 @@ const jwt = require('jsonwebtoken');
 const auth = async (req, res, next) => {
     
     try{
-        const token = req.header('Authorization').replace('Bearer', '');
-        console.log(token);
+        const token = req.header('Authorization').replace('Bearer ', '');
+    
         const decoded = jwt.verify(token, 'myKey');
-        console.log('decoded::::',decoded);
-       
+        // Fetch only that user, who's token is match with auth-token provided by postman.
         const user = await User.findOne({ _id: decoded._id, 'tokens.token':token });
-        
- 
-        console.log(user);
-       
 
         if(!user){
             throw new Error();
@@ -23,7 +18,8 @@ const auth = async (req, res, next) => {
         next();    
     }catch(err){
         console.log(err);
-        res.status(401).send({error:'Please authenticate.'});
+        res.status(500).send(err);
+        // res.status(401).send({error:'Please authenticate.'});
     }
     
 }
@@ -37,7 +33,7 @@ https://stackoverflow.com/questions/40539609/how-to-add-authorization-header-in-
 
 for testing:
 
-POST: http://localhost:3001/user/login
+POST: http://localhost:3000/user/login
 ---------------Hxxxxs --Body-----------------------
 --------------------------------------------------- 
                 0-raw                  JSON-v
@@ -50,9 +46,9 @@ POST: http://localhost:3001/user/login
 
 ---------------Headers ----------------------------
 key: Authorization 
-value: Bearer-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWNkYmEwNWNmNTgyMTBhOTA0NTZmZjUiLCJpYXQiOjE3MDg0MTE0MzMsImV4cCI6MTcwODQxNTAzM30.OF56QRB8aDSu2vvZdvUAn8zK6p826SFWxIQ1TAt1-qg
+value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWNkYmEwNWNmNTgyMTBhOTA0NTZmZjUiLCJpYXQiOjE3MDg0MjQwMDUsImV4cCI6MTcwODQ2MDAwNX0.zYACW8YH35NMbYn5jqDf6NjDVAAutPuZ5nEmNYSLPA8
 
 
 token:
-Bearer-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWNkYmEwNWNmNTgyMTBhOTA0NTZmZjUiLCJpYXQiOjE3MDg0MTE0MzMsImV4cCI6MTcwODQxNTAzM30.OF56QRB8aDSu2vvZdvUAn8zK6p826SFWxIQ1TAt1-qg
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWNkYmEwNWNmNTgyMTBhOTA0NTZmZjUiLCJpYXQiOjE3MDg0MjQwMDUsImV4cCI6MTcwODQ2MDAwNX0.zYACW8YH35NMbYn5jqDf6NjDVAAutPuZ5nEmNYSLPA8
 */

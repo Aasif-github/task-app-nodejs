@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const sharp = require('sharp'); // for multer, to shape or customise-image
 const { Error } = require("mongoose");
 
-// @ http://localhost:3001/registration
+// @ http://localhost:3000/registration
 // @ author: asif
 // @ similer package for validation: https://joi.dev/api/
 
@@ -63,29 +63,23 @@ exports.registration = [
 
 ];
 /*
-
+Method: GET
+http://localhost:3000/users/me 
+set header: Authorization : jwt(token) for that user.
 */
 exports.readUser = [
     
     async (req, res) =>{
         
         try{
-            const user = await userModel.find({});
+          res.send(req.user);
 
-            if(!user){
-                throw new Error();
-            }
-
-            res.status(200).send({user});
         }catch(err){
             res.status(500).send(err);
         }
         
     }
 ];
-
-
-
 
 /*
 @ Method: Get

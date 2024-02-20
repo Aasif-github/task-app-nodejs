@@ -1,0 +1,27 @@
+User Registration:
+Method:POST
+http://localhost:3000/registration
+{
+    "name":"Mike",
+    "email":"Mike@gmail.com",
+    "password":"12345"
+}
+
+========
+Output:
+{
+    "userSaved": {
+        "name": "Mike",
+        "email": "mike@gmail.com",
+        "password": "$2a$08$pB9nWTd6G.x4n7Yc4doVbuFUB5lG32zg4gb8s0vVUCdk3UtsIpXa6",
+        "_id": "65d488116226c6147b4ca5d2",
+        "tokens": [
+            {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWQ0ODgxMTYyMjZjNjE0N2I0Y2E1ZDIiLCJpYXQiOjE3MDg0MjcyODEsImV4cCI6MTcwODQ2MzI4MX0.UuZA3PLsE2lYmkzJqS2w11r3_oMcOmcmftkwhuR6OIs",
+                "_id": "65d488116226c6147b4ca5d4"
+            }
+        ],
+        "__v": 1
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWQ0ODgxMTYyMjZjNjE0N2I0Y2E1ZDIiLCJpYXQiOjE3MDg0MjcyODEsImV4cCI6MTcwODQ2MzI4MX0.UuZA3PLsE2lYmkzJqS2w11r3_oMcOmcmftkwhuR6OIs"
+}

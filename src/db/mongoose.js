@@ -77,7 +77,7 @@ app.set('view engine', 'ejs');
 // const databaseName = 'task-app';
 // const collectionName = 'users';
 
-const port = 3001;
+const port = 3000;
 
 // http://localhost:3000/users
 
