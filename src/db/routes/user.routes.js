@@ -19,15 +19,23 @@ const upload = multer({
 }) 
 
 router.get('/', function(req, res){
-    res.send('<h3>Welcome to my app..</h3>');
+    res.send(`<h3>Welcome to my app..</h3>`);
 })
 
 router.post('/registration', userController.registration);
 // Read user
+// router.get('/users/:id', auth, userController.readUser);
 router.get('/users/me', auth, userController.readUser);
 router.get('/checkPassword', userController.checkPassword);
-router.put('/updateUser/:id', userController.updateUserInfo);
-router.post('/user/login', userController.login);
+// Update user - using put we update specific field.
+
+//router.put('/updateUser/:id', userController.updateUserInfo);
+router.put('/updateUser/me', auth, userController.updateUserInfo);
+
+router.post('/user/login', userController.login); // when user login. auth-token is created with expire:10hrs
+
+//delete user - profile delete
+router.delete('/users/deleteProfile/me', auth, userController.deleteUser);
 
 router.post('/user/logout', auth, userController.logout);
 router.post('/user/logoutAll', auth, userController.logoutAll);

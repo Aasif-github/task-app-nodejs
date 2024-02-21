@@ -145,6 +145,7 @@ const connectDB = async () => {
   // });
 
   // update any task.
+  /*
   app.patch('/task/:id', async(req, res) => {
     
     try {
@@ -174,7 +175,7 @@ const connectDB = async () => {
       res.status(500).send(error);
     }
   })
-
+*/
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });

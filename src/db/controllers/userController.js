@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const sharp = require('sharp'); // for multer, to shape or customise-image
 const { Error } = require("mongoose");
+const User = require("../model/user");
 
 // @ http://localhost:3000/registration
 // @ author: asif
@@ -141,20 +142,15 @@ exports.updateUserInfo = [
     async (req, res) => {
         try{
             // console.log(req.params.id); 65cb61c1cf2d9636bae7823e
-            const user_id = req.params.id;
-            
-            const allowedTyped = ['name', 'email', 'password'];            
-
-            const user  = await userModel.findById(user_id);                        
-            
-            if(!user){
-                return res.send('No User Found');
-            }
+            // const user_id = req.params.id;        
+            // const user  = await userModel.findById(user_id);                        
+            // if(!user){
+            //     return res.send('No User Found');
+            // }
 
             // request by user for update
             const updates = Object.keys(req.body)
-            
-            console.log('up:', updates);
+            const allowedTyped = ['name', 'email', 'password'];           
 
             //  updates.every(callbackFun(ele, index, array))
             const isValidOperation = updates.every((update)=>{
@@ -165,15 +161,15 @@ exports.updateUserInfo = [
                 res.status(400).send({error:'Invalid key'});
             }
 
-            updates.forEach((update) => { return user[update] = req.body[update]});
+            updates.forEach((update) => { return req.user[update] = req.body[update]});
             
-            console.log('as', user);
+            console.log('as', req.user);
              
-            await user.save();
-            res.status(200).send(user);  
+            await req.user.save();
+            res.status(200).send(req.user);  
         }catch(err){
             console.log(err);
-            res.send(err);    
+            res.status(400).send(err);  
         }
         
     }
@@ -261,8 +257,6 @@ exports.logoutAll = [
     async(req, res) => {            
         try{
             const user = req.user;
-            const token = req.token;
-
             user.tokens = [];
             await user.save();
 
@@ -273,6 +267,33 @@ exports.logoutAll = [
     }
 ]
 
+exports.deleteUser = [
+    
+    async(req, res) => {            
+        try{
+             const user = req.user;
+             console.log('user',user);
+             if(user){
+                const deletedUser = await User.findOneAndDelete(user._id);
+                // await req.user.remove();
+                if (!deletedUser) {
+                    return res.status(404).json({ error: 'User not found' });
+                }
+                res.status(200).json({ message: 'User deleted successfully', deletedUser });
+             }                           
+        } catch(err){
+            console.log('err', err)
+            res.status(500).json(err);
+        }  
+    }
+
+]
+/*
+{
+     "email": "mike@gmail.com",
+     "password": "12345"
+}
+*/
 
 exports.uploadImage = [
 

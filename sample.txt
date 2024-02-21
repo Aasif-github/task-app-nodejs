@@ -70,3 +70,16 @@ app.get('/protected', checkTokenBlacklist, (req, res) => {
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
+
+==================================
+
+Sample - used to logout () // just use filter  and return un-match token. and save it in db.
+
+ tokens = [{token:1,_id:12},{token:2,_id:12},{token:3,_id:12},{token:4,_id:12}];
+ token = 2;
+ 
+ tokens = tokens.filter((tokObj)=>{
+     return tokObj.token !== token;
+ })
+ 
+ console.log(tokens); // [ { token: 1, _id: 12 }, { token: 3, _id: 12 }, { token: 4, _id: 12 } ]
