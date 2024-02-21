@@ -25,3 +25,48 @@ Output:
     },
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWQ0ODgxMTYyMjZjNjE0N2I0Y2E1ZDIiLCJpYXQiOjE3MDg0MjcyODEsImV4cCI6MTcwODQ2MzI4MX0.UuZA3PLsE2lYmkzJqS2w11r3_oMcOmcmftkwhuR6OIs"
 }
+===============================================
+ --------------------Logout---------------
+ 
+const express = require('express');
+const jwt = require('jsonwebtoken');
+
+const app = express();
+const secretKey = 'your_secret_key';
+
+// In-memory blacklist
+const tokenBlacklist = new Set();
+
+// Middleware to check if the token is blacklisted
+function checkTokenBlacklist(req, res, next) {
+  const token = req.header('Authorization');
+
+  if (token && tokenBlacklist.has(token)) {
+    return res.status(401).json({ error: 'Token revoked. Please log in again.' });
+  }
+
+  next();
+}
+
+// Endpoint for user logout
+app.post('/logout', (req, res) => {
+  const token = req.header('Authorization');
+
+  if (!token) {
+    return res.status(400).json({ error: 'Token not provided.' });
+  }
+
+  // Add the token to the blacklist
+  tokenBlacklist.add(token);
+
+  res.json({ message: 'Logout successful.' });
+});
+
+// Example protected route (requires valid token)
+app.get('/protected', checkTokenBlacklist, (req, res) => {
+  res.json({ message: 'Protected route accessed successfully.' });
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});

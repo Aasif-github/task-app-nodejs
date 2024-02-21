@@ -205,28 +205,70 @@ exports.login = [
 
 ];
 
+/*
+- just delete the token that is user by the user to login.
+- if we have multiple token(login with diff devices) then delete only one token that is used by login-User(using js-filter() to achive this)
+-----------------or---------------
+JUST RETURN ALL UN-MATCH TOKEN WITH REQUESTED-AUTH-TOKEN
+
+token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWNkYmEwNWNmNTgyMTBhOTA0NTZmZjUiLCJpYXQiOjE3MDg0OTU0NzcsImV4cCI6MTcwODUzMTQ3N30.cSEK5BOmdWVVwecjasVEVLvDJ4CKd5cZIOBB6rNSxxg',
+*/
+
 exports.logout = [
    
     async(req, res) => {
-            
-            const user = req.user;
-            console.log(user);
-            res.status(200).send({user});
+             
         try{
+            const user = req.user;
+            const token = req.token;
+            
+            req.user.tokens = req.user.tokens.filter((tokenObj) => {
+                return tokenObj.token !== req.token;  // return all un-matched tokens
+            })
+            
+            await req.user.save();
+            res.send('Token deleted.');
 
+            /*
+            const tokens = req.user.tokens;
+            const result = tokens.filter((obj) => obj.token === token );
+            console.log(result);
+
+            if(result){
+                indexToDelete = tokens.findIndex((obj) => {
+                    obj.token === token;
+                })
+                console.log('indexToDelete',indexToDelete);
+                if(indexToDelete !== -1){
+                    tokens.splice(indexToDelete, 1);
+                    console.log('token deleted successfully');
+                }
+            }
+            console.log(tokens);
+            */
         }catch(error){
-
+            console.log(error);
+            res.status(500).send(error,'Req, Token not found');
         }
     }
 ]
 
+/*
+user will logout all the devices at ones.
+*/
 exports.logoutAll = [
-    async(req, res) => {
-        
+    
+    async(req, res) => {            
         try{
-            
-        }catch(error){
+            const user = req.user;
+            const token = req.token;
 
+            user.tokens = [];
+            await user.save();
+
+            res.status(200).send('Logut from all devices');
+        }catch(error){
+            res.status(500).send(err,'error');
         }
     }
 ]

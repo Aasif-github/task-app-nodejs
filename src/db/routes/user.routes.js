@@ -30,7 +30,7 @@ router.put('/updateUser/:id', userController.updateUserInfo);
 router.post('/user/login', userController.login);
 
 router.post('/user/logout', auth, userController.logout);
-router.post('/user/logoutAll', userController.logoutAll);
+router.post('/user/logoutAll', auth, userController.logoutAll);
 
 /*
 
