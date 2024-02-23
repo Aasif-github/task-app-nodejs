@@ -46,6 +46,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    age:{
+        type:Number,
+        default:0,        
+        validate(value){
+            if(value < 0){
+                throw new Error('Age must be a Positive number')
+            }
+        }
+    },
     tokens:[{
         token:{
             type: String,
@@ -101,6 +110,17 @@ userSchema.statics.findByCredentials = async (email, password) => {
     
 }
 
+userSchema.methods.toJSON = function(){
+    const user = this;
+    
+    const userObject = user.toObject();
+
+    delete userObject.password;
+    delete userObject.tokens;    
+    
+    return userObject;
+}
+
 userSchema.methods.generateAuthToken = async function(){
     const user = this;
     
@@ -122,4 +142,4 @@ const User = mongoose.model('User', userSchema)
 
 module.exports = User;
 
-//
+//https://mongoosejs.com/docs/populate.html

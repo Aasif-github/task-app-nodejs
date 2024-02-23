@@ -3,7 +3,6 @@ const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const sharp = require('sharp'); // for multer, to shape or customise-image
 const { Error } = require("mongoose");
-const User = require("../model/user");
 
 // @ http://localhost:3000/registration
 // @ author: asif
@@ -71,18 +70,23 @@ set header: Authorization : jwt(token) for that user.
 exports.readUser = [
     
     async (req, res) =>{
-        
+       
+       
+        // hidding user password and token
         try{
-            userInfo = req.user;
+            res.send(req.user);
+            //better to use it model using toJson
+        //     const userInfo = {
+        //         "name": req.user.name,
+        //         "email": req.user.email
+        //     };                         
             
-            delete userInfo.password;
-            delete userInfo.tokens;
+        //     console.log(userInfo);
 
-            console.log(userInfo);
-
-          res.send(userInfo);
+        //   res.send(userInfo);
 
         }catch(err){
+            console.log(err);
             res.status(500).send(err);
         }
         

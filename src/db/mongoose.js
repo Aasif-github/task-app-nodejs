@@ -8,7 +8,7 @@ const Task = require('./model/task');
 const path = require('path');
 
 // Router
-const taskRouter = require('./routes/task');
+const taskRouter = require('./routes/task.routes');
 const userRouter = require('./routes/user.routes');
 // console.log('test', taskRouter)
 const app = express();
@@ -45,7 +45,7 @@ app.use(limiter);
 
 
 app.use(userRouter);
-
+app.use(taskRouter);
 //static template-engine
 const ejs = require('ejs');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -61,8 +61,6 @@ The express. json() function is a middleware function used in Express. js applic
 
 app.set("views", __dirname + "/views");
 
-app.use('/team/cool', taskRouter);
-http://localhost:3000/team/cool/abc
 
 
 
