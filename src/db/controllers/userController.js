@@ -18,6 +18,7 @@ exports.registration = [
     body('email').trim().isEmail().withMessage('Enter proper email'),
 
     body('password').trim().notEmpty(),
+    body('type').trim().notEmpty(),
  
         async (req, res) => {
     
@@ -39,7 +40,9 @@ exports.registration = [
             const user_data = new userModel({
                 name : req.body.name,
                 email : req.body.email,
-                password : req.body.password
+                password : req.body.password,
+                age: req.body.age,
+                type : req.body.type
             })
             
             //console.log(user_data);
@@ -70,21 +73,18 @@ set header: Authorization : jwt(token) for that user.
 exports.readUser = [
     
     async (req, res) =>{
-       
-       
-        // hidding user password and token
+          
+        // hidding private data - {user's password and token}
         try{
             res.send(req.user);
+        
             //better to use it model using toJson
-        //     const userInfo = {
-        //         "name": req.user.name,
-        //         "email": req.user.email
-        //     };                         
-            
-        //     console.log(userInfo);
-
-        //   res.send(userInfo);
-
+           /* const userInfo = {
+                "name": req.user.name,
+                "email": req.user.email
+            };                                     
+            console.log(userInfo);
+            res.send(userInfo); */            
         }catch(err){
             console.log(err);
             res.status(500).send(err);
@@ -154,7 +154,7 @@ exports.updateUserInfo = [
 
             // request by user for update
             const updates = Object.keys(req.body)
-            const allowedTyped = ['name', 'email', 'password'];           
+            const allowedTyped = ['name', 'email', 'password','age', 'type'];           
 
             //  updates.every(callbackFun(ele, index, array))
             const isValidOperation = updates.every((update)=>{

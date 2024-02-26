@@ -83,3 +83,78 @@ Sample - used to logout () // just use filter  and return un-match token. and sa
  })
  
  console.log(tokens); // [ { token: 1, _id: 12 }, { token: 3, _id: 12 }, { token: 4, _id: 12 } ]
+
+================================================================
+# what are the modules of  task manager app
+--------------------------------------------
+
+The modules of a task manager app can vary based on its features and functionalities. However, here are some common modules you might find in a task manager app:
+
+User Authentication:
+
+Registration: Allowing users to create accounts.
+Login: Authenticating users to access their tasks.
+Task Management:
+
+Create Task: Allowing users to add new tasks.
+View Task List: Displaying a list of tasks.
+Update Task: Allowing users to modify task details.
+Delete Task: Removing tasks from the list.
+Task Categories/Labels: Organizing tasks into categories.
+User Profile:
+
+View Profile: Displaying user information.
+Edit Profile: Allowing users to update their profile details.
+Change Password: Providing an option to change the password.
+Notifications:
+
+Task Reminders: Setting reminders for upcoming tasks.
+Email/SMS Notifications: Notifying users about task updates.
+Collaboration:
+
+Task Sharing: Allowing users to share tasks with others.
+Comments/Notes: Adding comments or notes to tasks.
+Search and Filtering:
+
+Search Tasks: Enabling users to search for specific tasks.
+Filter Tasks: Sorting tasks based on different criteria.
+Settings:
+
+Theme Selection: Allowing users to choose app themes.
+Notification Preferences: Customizing notification settings.
+Security:
+
+Access Control: Managing user roles and permissions.
+Secure Authentication: Implementing secure login mechanisms.
+Reports and Analytics:
+
+Task Completion Statistics: Providing insights into completed tasks.
+Productivity Reports: Analyzing user productivity.
+Sync Across Devices:
+
+Cloud Integration: Synchronizing tasks across multiple devices.
+Backup and Restore:
+
+Data Backup: Allowing users to backup their task data.
+Restore: Restoring data from backups.
+Integration with External Tools:
+
+Calendar Integration: Syncing tasks with calendar apps.
+Third-Party App Integration: Connecting with other productivity tools.
+Feedback and Support:
+
+Feedback Form: Collecting user feedback.
+Help and Support: Providing user assistance.
+These modules can be implemented as separate components or functionalities within the task manager app. The choice of modules depends on the specific requirements and goals of the app.
+
+===================================================
+
+Admin will assign task to users
+- there will two type of user ie (Admin and User)
+
+1. No user will get more the two task.
+2. Only login user can view his account.
+
+
+
+

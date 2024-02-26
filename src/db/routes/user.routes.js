@@ -24,6 +24,7 @@ router.get('/', function(req, res){
 
 router.post('/registration', userController.registration);
 // Read user
+
 // router.get('/users/:id', auth, userController.readUser);
 router.get('/users/me', auth, userController.readUser);
 router.get('/checkPassword', userController.checkPassword);

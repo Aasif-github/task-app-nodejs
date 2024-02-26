@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 // express-rate-limit
 // Only 10 request-hits accepted by app within 1 hrs
 const limiter = rateLimit({
-  max: 10,
+  max: 100,
   windowMs: 60 * 60 * 1000, //  60sec * 60min * 1000ms - 1hrs
   message: "Too many request from this IP"
 });
