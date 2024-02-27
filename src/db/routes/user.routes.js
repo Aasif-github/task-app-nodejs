@@ -4,6 +4,8 @@ const router = express.Router();
 const multer = require('multer');
 const auth = require('../middlewares/Auth.js');
 
+const mailService = require("../email/mail.js");
+
 // https://medium.com/geekculture/nodejs-image-upload-with-multer-e6cf08c1562f
 //configure multer
 const upload = multer({
@@ -17,6 +19,9 @@ const upload = multer({
         cb(undefined, true)
     }
 }) 
+
+// router.post('/send-mail', mail.sendMail);
+router.post('/send-mail', mailService.welcomeMail);
 
 router.get('/', function(req, res){
     res.send(`<h3>Welcome to my app..</h3>`);

@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const rateLimit = require("express-rate-limit");
+const cors = require('cors');
 
 
 const Task = require('./model/task');
@@ -14,6 +15,11 @@ const userRouter = require('./routes/user.routes');
 const app = express();
 
 app.use(express.json());
+
+// Use the cors middleware to enable CORS for all routes
+app.use(cors());
+
+
 // app.use(express.text());
 
 // middleware - (use before routes)

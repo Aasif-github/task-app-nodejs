@@ -84,9 +84,11 @@ exports.update = [
         }
 
         try{
-            
+            // get task details using (_id)req.params.id[task_id] and req.user._id(owner)
+            // if-user found - set updated value in database
+            // if not - return 404
         }catch(error){
-
+            res.status(400).send(error);
         }
     }
     
