@@ -1,4 +1,5 @@
 const taskModel = require('../model/task');
+const { findById } = require('../model/user');
  
 /*
 show all task, assignTo(user name) with status and datetime
@@ -71,24 +72,55 @@ req.body = {
 
 */
 
+/*
+Authorize user can update only his/her task
+
+*/
+
 exports.update = [
 
-    //validation
+    // validation
+
+    // owner:65dc37876393dc8af1942328
     async (req, res) =>{
+        
         const updates = Object.keys(req.body);
         const allowedType = ['description','completed'];
         const isValidOperation = updates.every((update) => allowedType.includes(update));
 
         if(!isValidOperation){
+            
             return res.status(400).send({ error: 'Invalid updates!' })
         }
 
         try{
-            // get task details using (_id)req.params.id[task_id] and req.user._id(owner)
+            // get task details using (_id)req.params.id[task_id] OR req.user._id(owner)
             // if-user found - set updated value in database
             // if not - return 404
+            
+            const fetchTaskByTaskId = await taskModel.findById({'_id': req.params.task_id });
+            
+            if(fetchTaskByTaskId === null){
+                return res.status(404).send({'msg':'No Task has been assign to this User'});    
+            }
+
+            
+            // Only assigned user will update task (what if other-user knows taskID)
+            if(JSON.stringify(fetchTaskByTaskId.assignedUser) === JSON.stringify(req.user._id)){
+              
+                updates.forEach((update) => fetchTaskByTaskId[update] = req.body[update])
+                
+                console.log(updates);
+
+                await fetchTaskByTaskId.save()
+            
+                res.send(fetchTaskByTaskId)
+            } else {                
+                return res.status(400).send({'msg':'Not Allowed - UnAutherised User'});    
+            }
         }catch(error){
-            res.status(400).send(error);
+            console.log(error);
+            return res.status(400).send(error);
         }
     }
     
@@ -100,15 +132,24 @@ exports.delete = [
 
     async (req, res) => {
         try {
-            const task = await taskModel.findOneAndDelete({ _id: req.params.id, owner: req.user._id })
-    
-            if (!task) {
-                res.status(404).send()
+              
+            const fetchTaskByTaskId = await taskModel.findById({'_id': req.params.task_id });
+            
+            if(fetchTaskByTaskId === null){
+                return res.status(404).send({'msg':'No Task has been assign to this User'});    
+            }
+            
+            // Only assigned user will update task (what if other-user knows taskID)
+            if(JSON.stringify(fetchTaskByTaskId.assignedUser) === JSON.stringify(req.user._id)){
+                
+                await taskModel.findOneAndDelete({ _id: req.params.task_id})
+
             }
     
-            res.send(task)
+            return res.send({'msg':'Task Deleted'});
+
         } catch (e) {
-            res.status(500).send()
+            return res.status(500).send(e)
         }
     }
 

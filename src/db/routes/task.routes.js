@@ -7,7 +7,7 @@ const auth = require('../middlewares/Auth');
 
 router.get('/task/show', auth, taskController.show);
 router.post('/task/add', auth, taskController.add);
-router.patch('/task/update/:id', auth, taskController.update);
-router.delete('/task/delete/:id', auth, taskController.delete);
+router.patch('/task/update/:task_id', auth, taskController.update);
+router.delete('/task/delete/:task_id', auth, taskController.delete);
 
 module.exports = router;

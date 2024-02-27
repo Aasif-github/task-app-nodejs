@@ -19,7 +19,7 @@ const sendMail = async (req, res) => {
       });
 
     let message = {
-        from: '"Aasif "aasif.github@gmail.com', // sender address
+        from: '"johndeo8789@gmail.com', // sender address
         to: "aasif.github@gmail.com", // list of receivers
         subject: "Hello ✔", // Subject line
         text: "Hello world?", // plain text body

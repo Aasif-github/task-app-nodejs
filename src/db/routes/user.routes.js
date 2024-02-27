@@ -20,7 +20,8 @@ const upload = multer({
     }
 }) 
 
-// router.post('/send-mail', mail.sendMail);
+// Welcome mail using mailgen
+// router.post('/send-mail', mailService.sendMail);
 router.post('/send-mail', mailService.welcomeMail);
 
 router.get('/', function(req, res){

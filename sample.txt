@@ -147,7 +147,7 @@ Feedback Form: Collecting user feedback.
 Help and Support: Providing user assistance.
 These modules can be implemented as separate components or functionalities within the task manager app. The choice of modules depends on the specific requirements and goals of the app.
 
-===================================================
+====================================================
 
 Admin will assign task to users
 - there will two type of user ie (Admin and User)
@@ -155,6 +155,7 @@ Admin will assign task to users
 1. No user will get more the two task.
 2. Only login user can view his account.
 
+=====================================================
 
 
 
