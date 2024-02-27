@@ -1,6 +1,50 @@
 const taskModel = require('../model/task');
 const { findById } = require('../model/user');
- 
+
+/*
+
+@SortByTaskCompleted -  {{url}}/tasks?completed=true
+@Pagination
+@Sorting
+
+*/
+
+exports.tasks = [
+
+    // validation
+
+    async (req, res) => {
+        
+        const match = {};
+        
+        if(req.query.completed){
+            match.completed =  req.query.completed === 'true'
+        }
+        
+        console.log(typeof match.completed);
+
+        console.log(typeof  req.query.completed);
+        
+        console.log(await req.user.populate({path:'age'})); 
+
+        try{
+            const tasks = await taskModel.find( match );
+
+            if(tasks.length === 0){
+                return res.status(404).send('No Task Found')
+            }
+
+            if(tasks.length > 0){                
+                return res.status(200).send(tasks);
+            }
+
+            console.log(tasks);
+        } catch(err) {
+            console.log(err);
+            res.status(500).send(err);
+        }       
+    }
+]
 /*
 show all task, assignTo(user name) with status and datetime
 Set Token of login - user
@@ -143,7 +187,6 @@ exports.delete = [
             if(JSON.stringify(fetchTaskByTaskId.assignedUser) === JSON.stringify(req.user._id)){
                 
                 await taskModel.findOneAndDelete({ _id: req.params.task_id})
-
             }
     
             return res.send({'msg':'Task Deleted'});
