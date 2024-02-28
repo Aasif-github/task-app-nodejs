@@ -35,7 +35,7 @@ In future, One User will only get 2 Tasks
 taskSchema.pre('validate', async function (next) {
     try {
       const users = await User.find({}, '_id');
-      console.log(users);
+      // console.log(users);
 
       this.schema.path('assignedUser').enum = users.map(user => user._id);
       next();

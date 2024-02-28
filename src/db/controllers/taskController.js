@@ -3,9 +3,9 @@ const { findById } = require('../model/user');
 
 /*
 
-@SortByTaskCompleted -  {{url}}/tasks?completed=true
-@Pagination
-@Sorting
+@ SortByTaskCompleted -  {{url}}/tasks?completed=true
+@ Pagination          -  {{url}}/tasks?limit=10&skip=20
+@ Sorting             -  {{url}}/tasks?sortBy=createdAt:desc | createdAt:asc
 
 */
 
@@ -16,41 +16,51 @@ exports.tasks = [
     async (req, res) => {
         
         const match = {};
-        
+        const sort = {};
+
         if(req.query.completed){
             match.completed =  req.query.completed === 'true'
         }
-        
-        console.log(typeof match.completed);
 
-        console.log(typeof  req.query.completed);
-        
-        console.log(await req.user.populate({path:'age'})); 
+        // sort = { createdAt : -1 }
+        if(req.query.sortBy){
+            const parts = req.query.sortBy.split(':')
+            sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+        }
 
-        try{
-            const tasks = await taskModel.find( match );
-
-            if(tasks.length === 0){
+        try{         
+          await req.user.populate({
+                        path:'tasks',
+                        match,
+                        options:{
+                            limit : parseInt(req.query.limit) ? 5 : 0,
+                            skip: parseInt(req.query.skip) ? 5 : 0,
+                            sort
+                        }
+                    });
+                     
+            if(req.user.tasks.length === 0){
                 return res.status(404).send('No Task Found')
             }
 
-            if(tasks.length > 0){                
-                return res.status(200).send(tasks);
-            }
+            if(req.user.tasks.length > 0){                
+                return res.status(200).send(req.user.tasks);     
+            }           
 
-            console.log(tasks);
         } catch(err) {
             console.log(err);
             res.status(500).send(err);
         }       
     }
-]
+];
+
 /*
 show all task, assignTo(user name) with status and datetime
 Set Token of login - user
 Note: Admin Tasklist will [] empty becouse Admin dont have assigned id. it has owner it.
 */
- exports.show = [
+
+exports.show = [
     //validation
     async (req, res) => {
         try{
@@ -77,28 +87,41 @@ exports.add = [
 
     async (req, res) => {
         
-    const taskList = await taskModel.find({ assignedUser:req.user._id }).populate('assignedUser');
-    // Check the number of tasks assigned to the user
-        console.log(taskList);
-    let assignedUser = taskList[0].assignedUser._id;
+    try{    
+        const taskList = await taskModel.find({ assignedUser:req.user._id }).populate('assignedUser');
     
-    const userTaskCount = await taskModel.countDocuments({ assignedUser });
-    
-   console.log(userTaskCount);
-
-    if (userTaskCount >= 2) {
-      return res.status(400).json({ error: 'User can have only two tasks.' });
-    }
-
-        const task = new taskModel({
-            ...req.body,
-            owner: req.user._id
-        })
+            // When task is created First time.
+            if(taskList.length == 0){
+                const task = new taskModel({
+                    ...req.body,
+                    owner: req.user._id
+                })
+                await task.save(); 
+                res.status(201).json({'status': task});
+            }
         
-        try{    
-           // await task.save();            
-            res.status(201).json({'status': task});
+            if(taskList.length > 0){
+                let assignedUser = taskList[0].assignedUser._id;
+                
+                // Check the number of tasks assigned to the user
+                const userTaskCount = await taskModel.countDocuments({ assignedUser });
+            
+                // User can have only 2 Task.
+                // if (userTaskCount >= 2) {
+                //     return res.status(400).json({ error: 'User can have only two tasks.' });
+                // }
+            
+                const task = new taskModel({
+                    ...req.body,
+                    owner: req.user._id
+                })
+                
+                await task.save(); 
+                res.status(201).json({'status': task});
+            }
+
         }catch(err){
+            console.log(err);
             res.status(500).send(err);
         }
     }

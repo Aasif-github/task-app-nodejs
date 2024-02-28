@@ -8,6 +8,8 @@ const auth = require('../middlewares/Auth');
 
 router.get('/tasks', auth, taskController.tasks);
 
+//http://localhost:3000/tasks?completed=true
+
 router.get('/task/show', auth, taskController.show);
 router.post('/task/add', auth, taskController.add);
 router.patch('/task/update/:task_id', auth, taskController.update);

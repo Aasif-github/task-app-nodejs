@@ -67,6 +67,14 @@ const userSchema = new mongoose.Schema({
     }]
 });
 
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',    
+    foreignField: 'owner',
+    foreignField: 'assignedUser',
+});
+
+
 // Hash Plain text Password before save it to database or pass it in userController.
 // we cann't use arrow-function becouse of this-binding.
 userSchema.pre('save', async function(next){
@@ -132,7 +140,7 @@ userSchema.methods.generateAuthToken = async function(){
     const secretKey = 'myKey';
     const payload = { _id:user._id.toString() };
     
-    const token = jwt.sign(payload, secretKey, {expiresIn:'10h'});
+    const token = jwt.sign(payload, secretKey, {expiresIn:'72h'});
 
     user.tokens = user.tokens.concat({ token });
     
