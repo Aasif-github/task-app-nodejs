@@ -4,6 +4,9 @@ const rateLimit = require("express-rate-limit");
 const cors = require('cors');
 
 
+require('dotenv').config();
+console.log('my Port no:',process.env.DEV_PORT) // remove this after you've confirmed it is working
+
 const Task = require('./model/task');
 
 const path = require('path');
@@ -81,13 +84,13 @@ app.set('view engine', 'ejs');
 // const databaseName = 'task-app';
 // const collectionName = 'users';
 
-const port = 3000;
+// const port = 3000;
 
 // http://localhost:3000/users
 
 const connectDB = async () => {
     try {
-      const conn = await mongoose.connect(`mongodb://localhost:27017/task-app`, {});
+      const conn = await mongoose.connect(process.env.DEV_DB, {});
       console.log(`MongoDB Connected: {conn.connection.host}`);
     } catch (error) {
       console.error(error.message);
@@ -180,6 +183,8 @@ const connectDB = async () => {
     }
   })
 */
+let port = process.env.DEV_PORT;
+
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });
