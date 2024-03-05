@@ -106,7 +106,7 @@ exports.add = [
                 // Check the number of tasks assigned to the user
                 const userTaskCount = await taskModel.countDocuments({ assignedUser });
             
-                // User can have only 2 Task.
+                // One User can have only 2 Task.
                 // if (userTaskCount >= 2) {
                 //     return res.status(400).json({ error: 'User can have only two tasks.' });
                 // }
