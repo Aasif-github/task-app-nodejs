@@ -8,7 +8,9 @@ const auth = require('../middlewares/Auth');
 
 router.get('/tasks', auth, taskController.tasks);
 
-//http://localhost:3000/tasks?completed=true
+//@ Sort By completed - http://localhost:3000/tasks?completed=true
+//@ Pagination        - http://localhost:3000/tasks?limit=10&skip=20
+//@ Sort By ase/desc  - http://localhost:3000/tasks?sortBy=createdAt:desc | createdAt:asc
 
 router.get('/task/show', auth, taskController.show);
 router.post('/task/add', auth, taskController.add);

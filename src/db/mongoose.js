@@ -7,7 +7,7 @@ const cors = require('cors');
 require('dotenv').config();
 console.log('my Port no:',process.env.DEV_PORT) // remove this after you've confirmed it is working
 
-const Task = require('./model/task');
+// const Task = require('./model/task');
 
 const path = require('path');
 

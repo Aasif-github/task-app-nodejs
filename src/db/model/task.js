@@ -29,7 +29,7 @@ const taskSchema = new mongoose.Schema({
 );
 
 /*
-In future, One User will only get 2 Tasks
+In future, One User will only get 2 Tasks -done
 */ 
 // Middleware to populate the enum options from the User model
 taskSchema.pre('validate', async function (next) {
