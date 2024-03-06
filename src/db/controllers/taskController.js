@@ -104,30 +104,18 @@ exports.add = [
               let assignedUser = req.body.assignedUser;
            
               const taskList = await taskModel.find({ assignedUser:assignedUser }).populate('assignedUser');
-              
-                // When task is created First time.
-                if(taskList.length == 0){
-                      const task = new taskModel({
-                          ...req.body,
-                          owner: req.user._id
-                      })
-                      //await task.save(); 
-                     return res.status(201).json({'status': task});
-              }
-  
-             
-  
-              if(taskList.length < 3){
+                     
+              if(taskList.length <= 2){
   
                   const task = new taskModel({
                       ...req.body,
                       owner: req.user._id
                   });
-                  // await task.save(); 
+                  await task.save(); 
                   return res.status(201).json({'status': task});
               }
               
-              if(taskList.length > 3){
+              if(taskList.length >= 2){
                 return res.status(400).json({ error: 'User can have only two tasks.' });
             }
             
