@@ -1,6 +1,6 @@
 const taskModel = require('../model/task');
 const { findById } = require('../model/user');
-
+const userModel = require('../model/user');
 /*
 
 @ SortByTaskCompleted -  {{url}}/tasks?completed=true
@@ -82,43 +82,64 @@ exports.show = [
     }
 ]
 
+/*
+@ req.user - login-user from auth.js
+*/
 exports.add = [
     // validation
 
     async (req, res) => {
         
     try{    
-        const taskList = await taskModel.find({ assignedUser:req.user._id }).populate('assignedUser');
-    
-            // When task is created First time.
-            if(taskList.length == 0){
-                const task = new taskModel({
-                    ...req.body,
-                    owner: req.user._id
-                })
-                await task.save(); 
-                res.status(201).json({'status': task});
-            }
+        // check user type. only admin will add Task and assign task to user.
+       //  const taskList = await taskModel.find({ owner:req.user._id }).populate('owner');
         
-            if(taskList.length > 0){
-                let assignedUser = taskList[0].assignedUser._id;
-                
-                // Check the number of tasks assigned to the user
-                const userTaskCount = await taskModel.countDocuments({ assignedUser });
-            
-                // One User can have only 2 Task.
-                // if (userTaskCount >= 2) {
-                //     return res.status(400).json({ error: 'User can have only two tasks.' });
-                // }
-            
-                const task = new taskModel({
-                    ...req.body,
-                    owner: req.user._id
-                })
-                
-                await task.save(); 
-                res.status(201).json({'status': task});
+        let loginUser = req.user.type.toLowerCase();
+        
+        console.log('loginUser', loginUser);
+      
+        if(loginUser === 'admin'){
+            console.log("welcome admin");
+              // Check total number of task that have assigned user.            
+              let assignedUser = req.body.assignedUser;
+           
+              const taskList = await taskModel.find({ assignedUser:assignedUser }).populate('assignedUser');
+              
+                // When task is created First time.
+                if(taskList.length == 0){
+                      const task = new taskModel({
+                          ...req.body,
+                          owner: req.user._id
+                      })
+                      //await task.save(); 
+                     return res.status(201).json({'status': task});
+              }
+  
+             
+  
+              if(taskList.length < 3){
+  
+                  const task = new taskModel({
+                      ...req.body,
+                      owner: req.user._id
+                  });
+                  // await task.save(); 
+                  return res.status(201).json({'status': task});
+              }
+              
+              if(taskList.length > 3){
+                return res.status(400).json({ error: 'User can have only two tasks.' });
             }
+            
+        }else{           
+            return res.status(401).json({'msg':'Unauthorized User Type'});
+        }
+
+          
+            
+            
+
+           
 
         }catch(err){
             console.log(err);

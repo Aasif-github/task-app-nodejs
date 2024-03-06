@@ -157,6 +157,94 @@ Admin will assign task to users
 
 =====================================================
 npm i dotenv
+===========================================================================
+
+# where we use  cookie in nodejs
+
+In Node.js, cookies are commonly used to store small pieces of information on the client side, allowing the server to maintain state across multiple requests. Cookies are often used for authentication, session management, and tracking user preferences. Here are some common use cases for cookies in Node.js:
+
+Session Management:
+Cookies are often used to manage user sessions. When a user logs in, the server can set a session cookie on the client side, which is then sent with each subsequent request. This allows the server to identify and maintain the user's session.
+
+Authentication:
+Cookies are commonly used for authentication purposes. After a successful login, the server can set an authentication cookie on the client side. This cookie can contain information like a user ID or a token that the server can use to identify and authenticate the user in subsequent requests.
+
+Remember Me Functionality:
+For websites that offer a "Remember Me" option during login, cookies are used to store a persistent session identifier on the client side. This allows users to stay logged in across multiple sessions or even after closing and reopening the browser.
+
+Tracking User Preferences:
+Cookies can be used to store user preferences or settings. For example, a website might store a user's language preference or theme choice in a cookie so that the website can provide a personalized experience.
+
+Analytics and Tracking:
+Cookies are commonly used for tracking user behavior and collecting analytics data. Services like Google Analytics use cookies to track user interactions on websites.
+
+In Node.js, you can work with cookies using various libraries such as express, cookie-parser, or cookie. The express framework, for example, has built-in support for handling cookies.
+
+Here's a simple example using the express framework and the cookie-parser middleware to set and read cookies:
+
+javascript
+Copy code
+const express = require('express');
+const cookieParser = require('cookie-parser');
+
+const app = express();
+app.use(cookieParser());
+
+app.get('/', (req, res) => {
+  // Set a cookie
+  res.cookie('user', 'john_doe', { maxAge: 900000, httpOnly: true });
+
+  // Read a cookie
+  const userCookie = req.cookies.user;
+  console.log('User Cookie:', userCookie);
+
+  res.send('Cookie example');
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+In this example, the server sets a cookie named 'user' with the value 'john_doe' and a maximum age of 900,000 milliseconds (15 minutes). The server also reads the 'user' cookie from the incoming request, demonstrating how to retrieve and use cookies in Node.js.
 
 
 
+==========================================
+Testing 
+When we assign task to any user.
+
+ task/AssignTaskToUser route
+ 1. check type admin . Only admin can assign task to user.
+ 2. 
+
+
+#
+Add Task
+
+Method : POST
+
+Request URI: http://localhost:3000/task/add
+
+Authorization Token 
+Type Bearer: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWRjMzViY2EzZmFiOGZlMzY3YTYwM2EiLCJpYXQiOjE3MDk3MjIyNDIsImV4cCI6MTcwOTk4MTQ0Mn0.A6PndjmFJthPTs7wR2CFg251oI7Llfew9JPhNbI_3Ng
+
+Request
+
+````json
+
+{
+    "description":"Task-17",
+    "completed": true,
+    "assignedUser":"65dc5e84bd2eeec795ce36a8"
+}
+
+````
+
+Response : 401 Unauthorized
+
+````json
+
+{
+    "msg": "Unauthorized User Type"
+}
+
+`````
