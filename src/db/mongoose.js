@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const rateLimit = require("express-rate-limit");
 const cors = require('cors');
 
-
 require('dotenv').config();
 console.log('my Port no:',process.env.DEV_PORT) // remove this after you've confirmed it is working
 
@@ -70,11 +69,6 @@ The express. json() function is a middleware function used in Express. js applic
 
 app.set("views", __dirname + "/views");
 
-
-
-
-
-
 // Set EJS as templating engine 
 app.set('view engine', 'ejs');
 
@@ -99,6 +93,18 @@ const connectDB = async () => {
   }
 
   connectDB();
+  
+  // https://www.digitalocean.com/community/tutorials/how-to-implement-caching-in-node-js-using-redis
+
+// Redis connection setup
+// (async () => { 
+//   await redisclient.connect(); 
+// })(); 
+
+// console.log("Connecting to the Redis"); 
+
+ 
+
 
   // app.get('/users', async (req, res) => {
     

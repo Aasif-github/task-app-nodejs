@@ -248,3 +248,69 @@ Response : 401 Unauthorized
 }
 
 `````
+// Import necessary modules
+const redis = require('redis');
+const { promisify } = require('util');
+const Task = require('../models/task'); // Assuming you have a Task model
+
+// Create a Redis client
+const redisClient = redis.createClient();
+
+// Promisify Redis client methods
+const getAsync = promisify(redisClient.get).bind(redisClient);
+const setAsync = promisify(redisClient.set).bind(redisClient);
+
+// Function to get tasks from cache or database
+async function getTasks() {
+  // Check if tasks are cached
+  const cachedTasks = await getAsync('tasks');
+
+  if (cachedTasks) {
+    // If tasks are cached, return them
+    return JSON.parse(cachedTasks);
+  } else {
+    // If tasks are not cached, fetch them from the database
+    const tasks = await Task.find();
+
+    // Cache the tasks for future use
+    await setAsync('tasks', JSON.stringify(tasks));
+
+    return tasks;
+  }
+}
+
+// Controller to render a page with tasks
+async function renderTasksPage(req, res) {
+  try {
+    // Get tasks from cache or database
+    const tasks = await getTasks();
+
+    // Render the page with tasks
+    res.render('tasks', { tasks });
+  } catch (error) {
+    // Handle errors
+    console.error('Error fetching tasks:', error);
+    res.status(500).send('Internal Server Error');
+  }
+}
+
+// Controller to get tasks data for an API endpoint
+async function getTasksAPI(req, res) {
+  try {
+    // Get tasks from cache or database
+    const tasks = await getTasks();
+
+    // Send tasks data as JSON response
+    res.json(tasks);
+  } catch (error) {
+    // Handle errors
+    console.error('Error fetching tasks:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+// Export controller functions
+module.exports = {
+  renderTasksPage,
+  getTasksAPI
+};
