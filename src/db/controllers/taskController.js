@@ -63,19 +63,62 @@ Note: Admin Tasklist will [] empty becouse Admin dont have assigned id. it has o
 */
 
 
+const redis = require('redis');
+const redisUrl = 'redis://127.0.0.1:6379';
+const password = '12345';
+const util = require('util');
+
 exports.show = [
     //validation
     async (req, res) => {
         try {
-           
+            let client;
+            client = redis.createClient({ url: redisUrl, password });
+            await client.connect();
+            // console.log('as',client)
+            client.get = util.promisify(client.get);
+            client.set = util.promisify(client.set);
+ 
+            // Create a single, shared client instance
+
+            //  Connect to Redis outside the request handler (consider using a connection pool)
+            if (!client) {
+                client = redis.createClient(
+                    {
+                        url: redisUrl,
+                        password
+                    });
+                    console.log('999');
+                await client.connect(); // Ensure connection is established before using client
+            }
+
+            // const util = require('util');
+            // client.get = util.promisify(client.get);
+
+            // Do we have any cached data in Redis
+            const cachedTasks = await client.get(JSON.stringify(req.user._id));
+            console.log('here 1', cachedTasks);
+            // Respond with cached data if available
+            if (cachedTasks) {
+
+                console.log('SERVING FROM CACHE');
+                return res.send(JSON.parse(cachedTasks));
+            }
+
             // Fetch tasks from MongoDB
             const taskList = await taskModel.find({ assignedUser: req.user._id }).populate('assignedUser');
 
             // Handle no tasks for new user or admin
             if (!taskList.length) {
-                
+                console.log('here 2');
                 return res.status(200).send({ Msg: 'No Task Has been Assigned to this User' });
             }
+
+            console.log('SERVING FROM MONGODB');
+
+            // Set data in Redis cache
+            await client.set(req.user._id, JSON.stringify(taskList));
+            console.log('here 3');
             return res.status(200).send({ tasks: taskList });
         } catch (err) {
             console.error(err);
@@ -83,7 +126,6 @@ exports.show = [
         }
     }
 ]
-
 /*
 @ req.user - login-user from auth.js
 */
